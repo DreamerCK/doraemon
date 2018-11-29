@@ -14,6 +14,7 @@
 
     <modules>
         <module>server_center</module>
+        <module>voice_dictation</module>
     </modules>
 
     <properties>
@@ -34,9 +35,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.4</version>
+            <scope>provided</scope>
         </dependency>
+
     </dependencies>
 
     <dependencyManagement>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>doraemon</artifactId>
+        <groupId>com.wanhutong</groupId>
+        <version>1.0.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>voice_dictation</artifactId>
+    <version>1.0.0</version>
+
+    <name>audio_video_king</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- 讯飞语音 start -->
+        <dependency>
+            <groupId>cn.xfyun</groupId>
+            <artifactId>msc</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.xfyun</groupId>
+            <artifactId>json-jena</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <!-- 讯飞语音 end -->
+
+        <!-- 音视频转换 start -->
+        <dependency>
+            <groupId>ws.schild</groupId>
+            <artifactId>jave-core</artifactId>
+            <version>2.4.4</version>
+        </dependency>
+        <!-- 音视频转换 end -->
+
+    </dependencies>
+
+
+</project>
