@@ -43,6 +43,7 @@ public class VoiceAssistant {
         }
         mIsEndOfSpeech = false;
         recognizePcmFileByte();
+
     }
 
     /**
@@ -57,10 +58,11 @@ public class VoiceAssistant {
         recognizer.setParameter(SpeechConstant.RESULT_TYPE, "plain");
         recognizer.startListening(recListener);
 
+
         FileInputStream fis = null;
         final byte[] buffer = new byte[64 * 1024];
         try {
-            fis = new FileInputStream(new File("C://Users//Lenovo/Desktop//test_voice//test.pcm"));
+            fis = new FileInputStream(new File("C://Users//Lenovo/Desktop//test_voice//test.wav"));
             if (0 == fis.available()) {
                 mResult.append("no audio avaible!");
                 recognizer.cancel();
@@ -85,7 +87,7 @@ public class VoiceAssistant {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }//end of try-catch-finally
+        }
 
     }
 
@@ -122,7 +124,7 @@ public class VoiceAssistant {
             if (islast) {
                 log.info("识别结果为:" + mResult.toString());
                 mIsEndOfSpeech = true;
-                mResult.delete(0, mResult.length());
+//                mResult.delete(0, mResult.length());
             }
         }
 

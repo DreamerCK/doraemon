@@ -1,7 +1,5 @@
 package com.wanhutong.common;
 
-import ws.schild.jave.*;
-
 import java.io.File;
 
 /**
