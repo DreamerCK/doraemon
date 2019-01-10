@@ -19,50 +19,66 @@ import java.io.IOException;
 @Slf4j
 public class VoiceAssistant {
 
-    private static final String APPID = "5b3c2e82";
-
+    private static final String APP_ID = "5b3c2e82";
+    private static VoiceAssistant voiceAssistant;
     private static StringBuffer mResult = new StringBuffer();
+    private String sRecognizeResults;
+
 
     public static void main(String[] args) {
-        SpeechUtility.createUtility("appid=" + APPID);
-        VoiceAssistant voiceAssistant = new VoiceAssistant();
-        voiceAssistant.recognize();
+        VoiceAssistant instance = getInstance();
+        instance.recognize("C://Users//Lenovo/Desktop//test_voice//iat_test_1.pcm", 16000);
+        while (!instance.mIsEndOfSpeech) {
+            DebugLog.Log("waitting....");
+        }
+        System.out.println(instance.sRecognizeResults);
     }
-
-
-    // *************************************音频流听写*************************************
 
     /**
      * 听写
      */
     private boolean mIsEndOfSpeech = false;
 
-    private void recognize() {
+    public static VoiceAssistant getInstance() {
+        if (voiceAssistant == null) {
+            voiceAssistant = new VoiceAssistant(APP_ID);
+        }
+        return voiceAssistant;
+    }
+
+    public VoiceAssistant(String appId) {
+        SpeechUtility.createUtility("appid=" + appId);
+    }
+
+    private void recognize(String pcmFileName, int sampleRate) {
+        // 清空识别结果
+        sRecognizeResults = "";
         if (SpeechRecognizer.getRecognizer() == null) {
             SpeechRecognizer.createRecognizer();
         }
         mIsEndOfSpeech = false;
-        recognizePcmFileByte();
-
+        recognizePcmFileByte(pcmFileName, sampleRate);
     }
 
     /**
      * 自动化测试注意要点 如果直接从音频文件识别，需要模拟真实的音速，防止音频队列的堵塞
      */
-    private void recognizePcmFileByte() {
+    private void recognizePcmFileByte(String pcmFileName, int sampleRate) {
         SpeechRecognizer recognizer = SpeechRecognizer.getRecognizer();
         recognizer.setParameter(SpeechConstant.AUDIO_SOURCE, "-1");
+        recognizer.setParameter(SpeechConstant.AUDIO_FORMAT, "pcm");
+        recognizer.setParameter(SpeechConstant.ASR_PTT, "0");
         //写音频流时，文件是应用层已有的，不必再保存
 //		recognizer.setParameter(SpeechConstant.ASR_AUDIO_PATH,
 //				"./iat_test.pcm");
         recognizer.setParameter(SpeechConstant.RESULT_TYPE, "plain");
+        recognizer.setParameter(SpeechConstant.SAMPLE_RATE, String.valueOf(sampleRate));
         recognizer.startListening(recListener);
-
 
         FileInputStream fis = null;
         final byte[] buffer = new byte[64 * 1024];
         try {
-            fis = new FileInputStream(new File("C://Users//Lenovo/Desktop//test_voice//test.wav"));
+            fis = new FileInputStream(new File(pcmFileName));
             if (0 == fis.available()) {
                 mResult.append("no audio avaible!");
                 recognizer.cancel();
@@ -72,10 +88,8 @@ public class VoiceAssistant {
                     lenRead = fis.read(buffer);
                     recognizer.writeAudio(buffer, 0, lenRead);
                 }//end of while
-
                 recognizer.stopListening();
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -120,11 +134,12 @@ public class VoiceAssistant {
         public void onResult(RecognizerResult result, boolean islast) {
             log.info("onResult enter");
             mResult.append(result.getResultString());
-
             if (islast) {
                 log.info("识别结果为:" + mResult.toString());
+                sRecognizeResults = mResult.toString();
                 mIsEndOfSpeech = true;
-//                mResult.delete(0, mResult.length());
+                mResult.delete(0, mResult.length());
+                waitupLoop();
             }
         }
 
@@ -133,6 +148,7 @@ public class VoiceAssistant {
             mIsEndOfSpeech = true;
             log.info("*************" + error.getErrorCode()
                     + "*************");
+            waitupLoop();
         }
 
         @Override
@@ -141,6 +157,13 @@ public class VoiceAssistant {
         }
 
     };
+
+    private void waitupLoop()
+    {
+        synchronized (this) {
+            VoiceAssistant.this.notify();
+        }
+    }
 
 
 }
