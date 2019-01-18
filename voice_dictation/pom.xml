@@ -49,6 +49,11 @@
             <version>2.4.4</version>
         </dependency>
         <!-- 音视频转换 end -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>27.0.1-jre</version>
+        </dependency>
 
     </dependencies>
 

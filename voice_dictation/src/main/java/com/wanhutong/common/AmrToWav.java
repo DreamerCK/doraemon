@@ -13,7 +13,7 @@ import java.io.File;
  **/
 public class AmrToWav {
 
-    public static void changeToWav(File source, String targetPath, Float duration) {
+    public static File changeToWav(File source, String targetPath, Float duration) {
         try {
             File target = new File(targetPath);
             CustomFFMPEGLocator customFFMPEGLocator = new CustomFFMPEGLocator();
@@ -31,8 +31,10 @@ public class AmrToWav {
             attrs.setDuration(duration);
             MultimediaObject multimediaSource = new MultimediaObject(source, customFFMPEGLocator);
             encoder.encode(multimediaSource, target, attrs);
+            return target;
         } catch (IllegalArgumentException | EncoderException e) {
             e.printStackTrace();
+            return null;
         }
     }
 

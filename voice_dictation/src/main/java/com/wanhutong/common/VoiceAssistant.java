@@ -41,7 +41,7 @@ public class VoiceAssistant {
         File file = new File("C://Users//Lenovo/Desktop//test_voice//1234567.amr");
         AmrToWav.changeToWav(file, "C://Users//Lenovo/Desktop//test_voice//1234567.wav", 60f);
         VoiceAssistant instance = getInstance();
-        instance.recognize("C://Users//Lenovo/Desktop//test_voice//1234567.wav", 16000);
+        instance.recognize(new File("C://Users//Lenovo/Desktop//test_voice//1234567.wav"), 16000);
         while (!instance.mIsEndOfSpeech) {
             log.debug("waitting....");
         }
@@ -65,20 +65,20 @@ public class VoiceAssistant {
         SpeechUtility.createUtility("appid=" + appId);
     }
 
-    public void recognize(String pcmFileName, int sampleRate) {
+    public void recognize(File recognitionFile, int sampleRate) {
         // 清空识别结果
         sRecognizeResults = "";
         if (SpeechRecognizer.getRecognizer() == null) {
             SpeechRecognizer.createRecognizer();
         }
         mIsEndOfSpeech = false;
-        recognizePcmFileByte(pcmFileName, sampleRate);
+        recognizePcmFileByte(recognitionFile, sampleRate);
     }
 
     /**
      * 自动化测试注意要点 如果直接从音频文件识别，需要模拟真实的音速，防止音频队列的堵塞
      */
-    private void recognizePcmFileByte(String pcmFileName, int sampleRate) {
+    private void recognizePcmFileByte(File recognitionFile, int sampleRate) {
         SpeechRecognizer recognizer = SpeechRecognizer.getRecognizer();
         recognizer.setParameter(SpeechConstant.AUDIO_SOURCE, "-1");
         recognizer.setParameter(SpeechConstant.AUDIO_FORMAT, "pcm");
@@ -93,7 +93,7 @@ public class VoiceAssistant {
         FileInputStream fis = null;
         final byte[] buffer = new byte[64 * 1024];
         try {
-            fis = new FileInputStream(new File(pcmFileName));
+            fis = new FileInputStream(recognitionFile);
             if (0 == fis.available()) {
                 mResult.append("no audio avaible!");
                 recognizer.cancel();
