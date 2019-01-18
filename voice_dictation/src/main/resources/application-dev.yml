@@ -5,3 +5,10 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8566/eureka/
+word:
+  dicPath: 'D:/dic.txt'
+  stopWordsPath: 'D:/stopwords.txt'
+  bigRamPath: 'classpath: bigram.txt'
+  testSegWord: '测试'
+  voiceTemp: 'voice_temp'
+  suffixName: '.wav'

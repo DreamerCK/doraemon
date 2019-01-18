@@ -1,11 +1,18 @@
 package com.wanhutong.common;
 
 import com.iflytek.cloud.speech.*;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apdplat.word.WordSegmenter;
+import org.apdplat.word.dictionary.DictionaryFactory;
+import org.apdplat.word.segmentation.SegmentationAlgorithm;
+import org.apdplat.word.segmentation.Word;
+import org.apdplat.word.util.WordConfTools;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * (C) Copyright 2017-now
@@ -22,22 +29,30 @@ public class VoiceAssistant {
     private static final String APP_ID = "5b3c2e82";
     private static VoiceAssistant voiceAssistant;
     private static StringBuffer mResult = new StringBuffer();
+    @Getter
     private String sRecognizeResults;
-
-
-    public static void main(String[] args) {
-        VoiceAssistant instance = getInstance();
-        instance.recognize("C://Users//Lenovo/Desktop//test_voice//iat_test_1.pcm", 16000);
-        while (!instance.mIsEndOfSpeech) {
-            DebugLog.Log("waitting....");
-        }
-        System.out.println(instance.sRecognizeResults);
-    }
-
     /**
      * 听写
      */
+    @Getter
     private boolean mIsEndOfSpeech = false;
+
+    public static void main(String[] args) {
+        File file = new File("C://Users//Lenovo/Desktop//test_voice//1234567.amr");
+        AmrToWav.changeToWav(file, "C://Users//Lenovo/Desktop//test_voice//1234567.wav", 60f);
+        VoiceAssistant instance = getInstance();
+        instance.recognize("C://Users//Lenovo/Desktop//test_voice//1234567.wav", 16000);
+        while (!instance.mIsEndOfSpeech) {
+            log.debug("waitting....");
+        }
+        System.out.println(instance.sRecognizeResults);
+        WordConfTools.set("dic.path", "d:/dic.txt");
+        DictionaryFactory.reload();
+        List<Word> seg = WordSegmenter.seg(instance.sRecognizeResults, SegmentationAlgorithm.BidirectionalMaximumMatching);
+        for (Word word : seg) {
+            System.out.println(word.getAcronymPinYin() + "====" + word.getText());
+        }
+    }
 
     public static VoiceAssistant getInstance() {
         if (voiceAssistant == null) {
@@ -50,7 +65,7 @@ public class VoiceAssistant {
         SpeechUtility.createUtility("appid=" + appId);
     }
 
-    private void recognize(String pcmFileName, int sampleRate) {
+    public void recognize(String pcmFileName, int sampleRate) {
         // 清空识别结果
         sRecognizeResults = "";
         if (SpeechRecognizer.getRecognizer() == null) {
@@ -158,8 +173,7 @@ public class VoiceAssistant {
 
     };
 
-    private void waitupLoop()
-    {
+    private void waitupLoop() {
         synchronized (this) {
             VoiceAssistant.this.notify();
         }

@@ -3,3 +3,6 @@ spring:
     active: dev
   application:
     name: voice_dictation
+  jackson:
+    time-zone: GMT+8
+    default-property-inclusion: non_null
