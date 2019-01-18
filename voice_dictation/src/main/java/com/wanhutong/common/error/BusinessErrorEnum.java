@@ -13,7 +13,7 @@ public enum BusinessErrorEnum implements CommonError {
 
     //1xxxx通用错误类型
     PARAMETER_VALIDATION_ERROR(10001, "参数不合法"),
-    VOICE_FILE_CAN_NOT_RECOGNIZE(10002, "请再大点声..."),
+    VOICE_CAN_NOT_UNDERSTAND(10002, "小通没有听清您说的什么，请在说一次吧~"),
 
     ;
 
