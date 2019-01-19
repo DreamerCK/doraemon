@@ -27,7 +27,12 @@ public class FileHandleUtils {
     }
 
     public static String createTempFilePath(String childDicName, String fileName) {
-        return builder(System.getProperty("java.io.tmpdir")).append(childDicName).append(File.separator).append(fileName).toString();
+        File parentFile = new File(builder(System.getProperty("java.io.tmpdir")).append(File.separator).append(childDicName).toString());
+        if(!parentFile.exists()){
+            //noinspection ResultOfMethodCallIgnored
+            parentFile.mkdirs();
+        }
+        return builder(parentFile.getAbsolutePath()).append(File.separator).append(fileName).toString();
     }
 
     public static String getFileNameWithoutSuffix(String fileName){

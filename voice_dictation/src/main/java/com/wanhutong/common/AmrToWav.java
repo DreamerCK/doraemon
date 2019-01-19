@@ -16,21 +16,19 @@ public class AmrToWav {
     public static File changeToWav(File source, String targetPath, Float duration) {
         try {
             File target = new File(targetPath);
-            CustomFFMPEGLocator customFFMPEGLocator = new CustomFFMPEGLocator();
-            Encoder encoder = new Encoder(customFFMPEGLocator);
+            Encoder encoder = new Encoder();
             AudioAttributes audio = new AudioAttributes();
             //设置解码格式，比特率，位数，声道等信息
             audio.setCodec("pcm_s16le");
             audio.setBitRate(705000);
             audio.setChannels(1);
             audio.setSamplingRate(16000);
-            audio.setVolume(10000);
             EncodingAttributes attrs = new EncodingAttributes();
             attrs.setFormat("wav");
             attrs.setAudioAttributes(audio);
             attrs.setDuration(duration);
-            MultimediaObject multimediaSource = new MultimediaObject(source, customFFMPEGLocator);
-            encoder.encode(multimediaSource, target, attrs);
+            MultimediaObject multimediaObject = new MultimediaObject(source);
+            encoder.encode(multimediaObject, target, attrs);
             return target;
         } catch (IllegalArgumentException | EncoderException e) {
             e.printStackTrace();

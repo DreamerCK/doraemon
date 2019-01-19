@@ -1,0 +1,14 @@
+server:
+  port: 8668
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8568/eureka/
+word:
+  dicPath: '/data/seg/dic.txt'
+  stopWordsPath: '/data/seg/stopwords.txt'
+  bigRamPath: 'classpath: bigram.txt'
+  testSegWord: '测试'
+  voiceTemp: 'voice_temp'
+  suffixName: '.wav'

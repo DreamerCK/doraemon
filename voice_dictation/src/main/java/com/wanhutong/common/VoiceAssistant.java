@@ -38,20 +38,20 @@ public class VoiceAssistant {
     private boolean mIsEndOfSpeech = false;
 
     public static void main(String[] args) {
-        File file = new File("C://Users//Lenovo/Desktop//test_voice//1234567.amr");
-        AmrToWav.changeToWav(file, "C://Users//Lenovo/Desktop//test_voice//1234567.wav", 60f);
+        File file = new File("C:\\Users\\Dream\\Desktop\\test_voice\\yibaoluo(1).amr");
+        AmrToWav.changeToWav(file, "C:\\Users\\Dream\\Desktop\\test_voice\\hh.wav", 60f);
         VoiceAssistant instance = getInstance();
-        instance.recognize(new File("C://Users//Lenovo/Desktop//test_voice//1234567.wav"), 16000);
+        instance.recognize(new File("C:\\Users\\Dream\\Desktop\\test_voice\\1234567.wav"), 16000);
         while (!instance.mIsEndOfSpeech) {
             log.debug("waitting....");
         }
         System.out.println(instance.sRecognizeResults);
-        WordConfTools.set("dic.path", "d:/dic.txt");
-        DictionaryFactory.reload();
-        List<Word> seg = WordSegmenter.seg(instance.sRecognizeResults, SegmentationAlgorithm.BidirectionalMaximumMatching);
-        for (Word word : seg) {
-            System.out.println(word.getAcronymPinYin() + "====" + word.getText());
-        }
+//        WordConfTools.set("dic.path", "d:/dic.txt");
+//        DictionaryFactory.reload();
+//        List<Word> seg = WordSegmenter.seg(instance.sRecognizeResults, SegmentationAlgorithm.BidirectionalMaximumMatching);
+//        for (Word word : seg) {
+//            System.out.println(word.getAcronymPinYin() + "====" + word.getText());
+//        }
     }
 
     public static VoiceAssistant getInstance() {
@@ -147,6 +147,7 @@ public class VoiceAssistant {
 
         @Override
         public void onResult(RecognizerResult result, boolean islast) {
+            log.info("onResult enter");
             log.info("onResult enter");
             mResult.append(result.getResultString());
             if (islast) {
