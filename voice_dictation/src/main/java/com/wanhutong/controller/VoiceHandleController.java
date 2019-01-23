@@ -91,14 +91,14 @@ public class VoiceHandleController {
             return ResultVo.createBySuccessData(VoiceResultVo.builder().resultStr(recognizeResult).segWords(segWord).build());
         } finally {
             if (!Objects.isNull(targetFile) && targetFile.exists()) {
-                //noinspection ResultOfMethodCallIgnored
                 log.info(targetFile.getAbsolutePath());
-//                targetFile.delete();
+                //noinspection ResultOfMethodCallIgnored
+                targetFile.delete();
             }
             if (!Objects.isNull(convertFile) && convertFile.exists()) {
-                //noinspection ResultOfMethodCallIgnored
                 log.info(convertFile.getAbsolutePath());
-//                convertFile.delete();
+                //noinspection ResultOfMethodCallIgnored
+                convertFile.delete();
             }
         }
     }
