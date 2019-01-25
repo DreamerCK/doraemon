@@ -77,9 +77,7 @@ public class VoiceHandleController {
             }
             //语音识别
             VoiceAssistant instance = VoiceAssistant.getInstance();
-            log.info(targetFile.exists() + "");
             instance.recognize(targetFile, 16000);
-            log.info(targetFile.exists() + "");
             while (!instance.isMIsEndOfSpeech()) {
                 log.debug("waiting....");
             }
