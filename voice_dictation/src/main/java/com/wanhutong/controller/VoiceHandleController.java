@@ -58,7 +58,7 @@ public class VoiceHandleController {
                 log.warn("=====convertFile:{}=========fileType:{}", convertFile, fileType);
                 return ResultVo.createByErrorEnum(BusinessErrorEnum.VOICE_CAN_NOT_UNDERSTAND);
             }
-            //如果音频文件为.wav和.pcm 则音频文件无需转换格式
+            //如果音频文件为.wav 格式的需要先转为其他音频格式如.mp3,再通过其他格式转为.wav格式
             log.info("=====convertFile:{}", convertFile.getAbsolutePath());
             if (FILE_TYPE_WAV != fileType.getFileType()) {
                 FileUtils.copyInputStreamToFile(file.getInputStream(), convertFile);
