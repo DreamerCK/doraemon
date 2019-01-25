@@ -11,4 +11,5 @@ word:
   bigRamPath: 'classpath: bigram.txt'
   testSegWord: '测试'
   voiceTemp: 'voice_temp'
-  suffixName: '.wav'
+  wavSuffixName: '.wav'
+  mp3SuffixName: '.mp3'

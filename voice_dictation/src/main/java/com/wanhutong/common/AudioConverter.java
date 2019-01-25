@@ -11,7 +11,7 @@ import java.io.File;
  * @author DreamerCK
  * @date 2018-11-29 17:33
  **/
-public class AmrToWav {
+public class AudioConverter {
 
     public static File changeToWav(File source, String targetPath, Float duration) {
         try {
@@ -34,6 +34,32 @@ public class AmrToWav {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static File chanageToMp3(File source, String targetPath) {
+        try {
+            File target = new File(targetPath);
+            AudioAttributes audio = new AudioAttributes();
+            audio.setCodec("libmp3lame");
+            audio.setBitRate(128000);
+            audio.setChannels(2);
+            audio.setSamplingRate(44100);
+            EncodingAttributes attrs = new EncodingAttributes();
+            attrs.setFormat("mp3");
+            attrs.setAudioAttributes(audio);
+            Encoder encoder = new Encoder();
+            MultimediaObject multimediaObject = new MultimediaObject(source);
+            encoder.encode(multimediaObject, target, attrs);
+            return target;
+        } catch (IllegalArgumentException | EncoderException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static void main(String[] args) {
+        File file = chanageToMp3(new File("C:\\Users\\Lenovo\\Desktop\\fsdownload\\Recorder_049.wav"), "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\voice_temp\\Recorder_049.mp3");
+        System.out.println(file.getAbsolutePath());
     }
 
 }

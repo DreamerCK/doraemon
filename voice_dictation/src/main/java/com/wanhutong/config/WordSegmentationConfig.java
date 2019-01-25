@@ -25,6 +25,7 @@ public class WordSegmentationConfig {
     private String bigRamPath;
     private String testSegWord;
     private String voiceTemp;
-    private String suffixName;
+    private String wavSuffixName;
+    private String mp3SuffixName;
 
 }

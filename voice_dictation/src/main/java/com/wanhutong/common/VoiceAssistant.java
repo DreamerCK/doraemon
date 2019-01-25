@@ -3,16 +3,10 @@ package com.wanhutong.common;
 import com.iflytek.cloud.speech.*;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.apdplat.word.WordSegmenter;
-import org.apdplat.word.dictionary.DictionaryFactory;
-import org.apdplat.word.segmentation.SegmentationAlgorithm;
-import org.apdplat.word.segmentation.Word;
-import org.apdplat.word.util.WordConfTools;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * (C) Copyright 2017-now
@@ -39,7 +33,7 @@ public class VoiceAssistant {
 
     public static void main(String[] args) {
         File file = new File("C:\\Users\\Dream\\Desktop\\test_voice\\yibaoluo(1).amr");
-        AmrToWav.changeToWav(file, "C:\\Users\\Dream\\Desktop\\test_voice\\hh.wav", 60f);
+        AudioConverter.changeToWav(file, "C:\\Users\\Dream\\Desktop\\test_voice\\hh.wav", 60f);
         VoiceAssistant instance = getInstance();
         instance.recognize(new File("C:\\Users\\Dream\\Desktop\\test_voice\\1234567.wav"), 16000);
         while (!instance.mIsEndOfSpeech) {

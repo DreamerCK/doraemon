@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.wanhutong.MediaFile.FILE_TYPE_PCM;
 import static com.wanhutong.MediaFile.FILE_TYPE_WAV;
 
 /**
@@ -45,7 +44,7 @@ public class VoiceHandleController {
 
     @PostMapping(value = "/file/recognition", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResultVo recognizeVoiceFileToWord(@RequestParam(value = "voiceFile") MultipartFile file) throws IOException {
-        File targetFile = null, convertFile = null;
+        File targetFile = null, convertFile = null, middleFile = null;
         try {
             //校验是否音频文件
             String originalFilename = file.getOriginalFilename();
@@ -61,17 +60,20 @@ public class VoiceHandleController {
             }
             //如果音频文件为.wav和.pcm 则音频文件无需转换格式
             log.info("=====convertFile:{}", convertFile.getAbsolutePath());
-            if (!(FILE_TYPE_WAV == fileType.getFileType() || FILE_TYPE_PCM == fileType.getFileType())) {
+            if (FILE_TYPE_WAV != fileType.getFileType()) {
                 FileUtils.copyInputStreamToFile(file.getInputStream(), convertFile);
-                String targetFilePath = FileHandleUtils.createTempFilePath(wordConfig.getVoiceTemp(), FileHandleUtils.builder(FileHandleUtils.getFileNameWithoutSuffix(originalFilename)).append(wordConfig.getSuffixName()).toString());
+                String targetFilePath = FileHandleUtils.createTempFilePath(wordConfig.getVoiceTemp(), FileHandleUtils.builder(FileHandleUtils.getFileNameWithoutSuffix(originalFilename)).append(wordConfig.getWavSuffixName()).toString());
                 log.info("=====targetFilePath:{}", targetFilePath);
-                targetFile = AmrToWav.changeToWav(convertFile, targetFilePath, 60f);
+                targetFile = AudioConverter.changeToWav(convertFile, targetFilePath, 60f);
                 log.info("=====targetFile1:{}", targetFile);
             } else {
-                targetFile = convertFile;
-                FileUtils.copyInputStreamToFile(file.getInputStream(), targetFile);
+                FileUtils.copyInputStreamToFile(file.getInputStream(), convertFile);
+                String middleFilePath = FileHandleUtils.createTempFilePath(wordConfig.getVoiceTemp(), FileHandleUtils.builder(FileHandleUtils.getFileNameWithoutSuffix(originalFilename)).append(wordConfig.getMp3SuffixName()).toString());
+                log.info("=====middleFilePath:{}", middleFilePath);
+                middleFile = AudioConverter.chanageToMp3(convertFile, middleFilePath);
+                String targetFilePath = FileHandleUtils.createTempFilePath(wordConfig.getVoiceTemp(), FileHandleUtils.builder(FileHandleUtils.getFileNameWithoutSuffix(originalFilename)).append(wordConfig.getWavSuffixName()).toString());
+                targetFile = AudioConverter.changeToWav(middleFile, targetFilePath, 60f);
                 log.info("=====targetFile2:{}", targetFile);
-
             }
             //语音识别
             VoiceAssistant instance = VoiceAssistant.getInstance();
@@ -94,6 +96,11 @@ public class VoiceHandleController {
                 log.info(targetFile.getAbsolutePath());
                 //noinspection ResultOfMethodCallIgnored
                 targetFile.delete();
+            }
+            if (!Objects.isNull(middleFile) && middleFile.exists()) {
+                log.info(middleFile.getAbsolutePath());
+                //noinspection ResultOfMethodCallIgnored
+                middleFile.delete();
             }
             if (!Objects.isNull(convertFile) && convertFile.exists()) {
                 log.info(convertFile.getAbsolutePath());
